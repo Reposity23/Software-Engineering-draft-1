@@ -1,0 +1,14 @@
+:root {
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background-color: #f5f7fb;
+  color: #1f2a44;
+}
+
+body {
+  margin: 0;
+  background-color: #f5f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
