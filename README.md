@@ -32,21 +32,26 @@ Backend `.env`:
 - `JWT_SECRET` - JWT secret
 - `PORT` - API port (default `5000`)
 
-## Demo Credentials
+## Login & Roles
+Seeded accounts:
 - **Owner:** owner@joap.local / owner123
 - **Employee:** employee@joap.local / employee123
 
-Log in at `http://localhost:5173/login` using one of the demo accounts after seeding.
+Log in at `http://localhost:5173/login` after running the seed script. Public registration is limited to the **employee** role; only seeded accounts should be used for admin/owner access.
+
+### Role-based Access
+- **Owner/Admin:** Full access, including Accounting, Maintenance (backup/restore), and Settings.
+- **Employee:** Dashboard, Inventory, Suppliers, Orders, Billing & Payments, Reports, Search, Help, and About.
+
+## Basic User Flow (Demo)
+1. Stock in products from the Inventory page.
+2. Create an order and reserve stock from Orders.
+3. Log a GCash payment (direct save) in Billing & Payments.
+4. View the ledger and create a reversing entry if needed in Accounting.
+5. Review Reports and download backups in Maintenance.
 
 ## Seed Data
 Run `npm run seed` in `/backend` to create demo users, suppliers, products, and low stock alerts.
-
-## Payment Flow Test
-1. Create a product and stock in via Inventory.
-2. Create an order and reserve stock.
-3. Log a GCash payment in Billing & Payments.
-4. Order is marked **Paid**, and a Journal Entry is created automatically.
-5. Reverse entries from the Accounting module when needed.
 
 ## Railway Connection (Single Source of Truth)
 **IMPORTANT:** edit `backend/api_railway.py` when switching Railway projects.
@@ -63,6 +68,9 @@ python backend/api_railway.py
 2. Mirror the values in `backend/config/railway.js` if you want Node defaults updated.
 3. Update `backend/.env` if you prefer environment override.
 4. Restart the backend server.
+
+## Future Enhancements
+- Advanced forecasting (e.g., ARIMA demand forecasting) and richer analytics dashboards.
 
 ## Folder Structure
 ```

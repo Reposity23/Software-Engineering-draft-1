@@ -13,7 +13,8 @@ import {
   Chip,
   Snackbar,
   Alert,
-  TextField
+  TextField,
+  Tooltip
 } from "@mui/material";
 import TopBar from "../components/TopBar";
 import api from "../services/api";
@@ -74,6 +75,9 @@ const AccountingPage = () => {
       <Card sx={{ mt: 3 }}>
         <CardContent>
           <Typography variant="h6">Ledger Entries</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Ledger records are append-only. Use reversal entries to correct mistakes.
+          </Typography>
           <Table sx={{ mt: 2 }}>
             <TableHead>
               <TableRow>
@@ -95,9 +99,11 @@ const AccountingPage = () => {
                   </TableCell>
                   <TableCell>
                     {canReverse ? (
-                      <Button variant="outlined" size="small" onClick={() => handleReverse(entry._id)}>
-                        Reverse
-                      </Button>
+                      <Tooltip title="Creates a reversing entry (append-only correction).">
+                        <Button variant="outlined" size="small" onClick={() => handleReverse(entry._id)}>
+                          Reverse
+                        </Button>
+                      </Tooltip>
                     ) : (
                       <Typography variant="caption" color="text.secondary">
                         Restricted
