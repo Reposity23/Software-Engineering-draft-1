@@ -1,7 +1,8 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import theme from "./theme";
+import { useMemo } from "react";
+import getTheme from "./theme";
 import DashboardLayout from "./layout/DashboardLayout";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -16,6 +17,8 @@ import MaintenancePage from "./pages/MaintenancePage";
 import SettingsPage from "./pages/SettingsPage";
 import HelpPage from "./pages/HelpPage";
 import AboutPage from "./pages/AboutPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { useThemeMode } from "./context/ThemeModeContext";
 
 const withLayout = (Component, title) => (
   <DashboardLayout>
@@ -23,31 +26,115 @@ const withLayout = (Component, title) => (
   </DashboardLayout>
 );
 
-const App = () => (
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/dashboard" element={withLayout(DashboardPage, "Dashboard")} />
-      <Route path="/inventory" element={withLayout(InventoryPage, "Inventory")} />
-      <Route path="/suppliers" element={withLayout(SuppliersPage, "Suppliers")} />
-      <Route path="/orders" element={withLayout(OrdersPage, "Orders")} />
-      <Route
-        path="/billing-payments"
-        element={withLayout(BillingPaymentsPage, "Billing & Payments")}
-      />
-      <Route path="/accounting" element={withLayout(AccountingPage, "Accounting")} />
-      <Route path="/reports" element={withLayout(ReportsPage, "Reports")} />
-      <Route path="/search" element={withLayout(SearchPage, "Search")}
-      />
-      <Route path="/maintenance" element={withLayout(MaintenancePage, "Maintenance")} />
-      <Route path="/settings" element={withLayout(SettingsPage, "Settings")} />
-      <Route path="/help" element={withLayout(HelpPage, "Help & Support")} />
-      <Route path="/about" element={withLayout(AboutPage, "About")}
-      />
-    </Routes>
-  </ThemeProvider>
-);
+const App = () => {
+  const { mode } = useThemeMode();
+  const theme = useMemo(() => getTheme(mode), [mode]);
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              {withLayout(DashboardPage, "Dashboard")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inventory"
+          element={
+            <ProtectedRoute>
+              {withLayout(InventoryPage, "Inventory")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/suppliers"
+          element={
+            <ProtectedRoute>
+              {withLayout(SuppliersPage, "Suppliers")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              {withLayout(OrdersPage, "Orders")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing-payments"
+          element={
+            <ProtectedRoute>
+              {withLayout(BillingPaymentsPage, "Billing & Payments")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/accounting"
+          element={
+            <ProtectedRoute roles={["owner", "admin"]}>
+              {withLayout(AccountingPage, "Accounting")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              {withLayout(ReportsPage, "Reports")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              {withLayout(SearchPage, "Search")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/maintenance"
+          element={
+            <ProtectedRoute roles={["owner", "admin"]}>
+              {withLayout(MaintenancePage, "Maintenance")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute roles={["owner", "admin"]}>
+              {withLayout(SettingsPage, "Settings")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/help"
+          element={
+            <ProtectedRoute>
+              {withLayout(HelpPage, "Help & Support")}
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              {withLayout(AboutPage, "About")}
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </ThemeProvider>
+  );
+};
 
 export default App;

@@ -22,6 +22,7 @@ const accountingRoutes = require("./routes/accounting");
 const searchRoutes = require("./routes/search");
 const maintenanceRoutes = require("./routes/maintenance");
 const reportRoutes = require("./routes/reports");
+const { buildSearchIndex } = require("./utils/searchIndex");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/suppliers", supplierRoutes);
@@ -44,6 +45,9 @@ mongoose
   .connect(process.env.MONGO_URI || railway.mongoUri)
   .then(() => {
     console.log("MongoDB connected");
+    buildSearchIndex().catch((err) => {
+      console.error("Search index build failed:", err.message);
+    });
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

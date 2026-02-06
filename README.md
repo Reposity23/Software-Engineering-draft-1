@@ -36,6 +36,8 @@ Backend `.env`:
 - **Owner:** owner@joap.local / owner123
 - **Employee:** employee@joap.local / employee123
 
+Log in at `http://localhost:5173/login` using one of the demo accounts after seeding.
+
 ## Seed Data
 Run `npm run seed` in `/backend` to create demo users, suppliers, products, and low stock alerts.
 
